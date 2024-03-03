@@ -73,7 +73,7 @@ public class LoanService {
         Long recordId = updateLoanRecord(bookId);
         checkOverdue(recordId);
 
-        return COMPLETE_LOAN_BOOK;
+        return COMPLETE_RETURN_BOOK;
 
     }
 
