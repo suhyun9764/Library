@@ -1,7 +1,7 @@
 package com.sparta.library.controller;
 
-import com.sparta.library.dto.BookRequestDto;
-import com.sparta.library.dto.BookResponseDto;
+import com.sparta.library.dto.requestdto.BookRequestDto;
+import com.sparta.library.dto.responsedto.BookResponseDto;
 import com.sparta.library.entity.enums.Language;
 import com.sparta.library.repository.BookRepository;
 import com.sparta.library.service.BookService;

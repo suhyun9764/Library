@@ -1,4 +1,4 @@
-package com.sparta.library.exception;
+package com.sparta.library.exception.book;
 
 public class BookNotFoundException extends RuntimeException{
     public BookNotFoundException(String message) {

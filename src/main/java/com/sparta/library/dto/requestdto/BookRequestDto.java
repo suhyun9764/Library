@@ -1,4 +1,4 @@
-package com.sparta.library.dto;
+package com.sparta.library.dto.requestdto;
 
 import com.sparta.library.entity.enums.Language;
 import lombok.Getter;

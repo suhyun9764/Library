@@ -1,8 +1,8 @@
 package com.sparta.library.service;
 
-import com.sparta.library.exception.BookNotFoundException;
-import com.sparta.library.dto.BookRequestDto;
-import com.sparta.library.dto.BookResponseDto;
+import com.sparta.library.exception.book.BookNotFoundException;
+import com.sparta.library.dto.requestdto.BookRequestDto;
+import com.sparta.library.dto.responsedto.BookResponseDto;
 import com.sparta.library.entity.Book;
 import com.sparta.library.repository.BookRepository;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,6 @@
 package com.sparta.library.entity;
 
-import com.sparta.library.dto.BookRequestDto;
+import com.sparta.library.dto.requestdto.BookRequestDto;
 import com.sparta.library.entity.enums.Language;
 import jakarta.persistence.*;
 import lombok.Getter;

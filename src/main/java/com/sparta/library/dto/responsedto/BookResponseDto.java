@@ -1,4 +1,4 @@
-package com.sparta.library.dto;
+package com.sparta.library.dto.responsedto;
 
 import com.sparta.library.entity.Book;
 import lombok.Getter;

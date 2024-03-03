@@ -1,7 +1,7 @@
 package com.sparta.library.controller;
 
-import com.sparta.library.dto.MemberRequestDto;
-import com.sparta.library.dto.MemberResponseDto;
+import com.sparta.library.dto.requestdto.MemberRequestDto;
+import com.sparta.library.dto.responsedto.MemberResponseDto;
 import com.sparta.library.service.MemberService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,4 +24,6 @@ public class MemberController {
             MemberResponseDto memberResponseDto = memberService.save(memberRequestDto);
             return ResponseEntity.ok(memberResponseDto);
     }
+
+
 }

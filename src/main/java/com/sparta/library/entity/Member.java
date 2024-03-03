@@ -1,6 +1,6 @@
 package com.sparta.library.entity;
 
-import com.sparta.library.dto.MemberRequestDto;
+import com.sparta.library.dto.requestdto.MemberRequestDto;
 import com.sparta.library.entity.enums.Gender;
 import jakarta.persistence.*;
 import lombok.Getter;

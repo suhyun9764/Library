@@ -1,5 +1,7 @@
 package com.sparta.library.exception;
 
+import com.sparta.library.exception.book.BookNotFoundException;
+import com.sparta.library.exception.member.MemberDuplicateException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

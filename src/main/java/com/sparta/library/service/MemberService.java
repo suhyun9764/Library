@@ -1,9 +1,9 @@
 package com.sparta.library.service;
 
-import com.sparta.library.dto.MemberRequestDto;
-import com.sparta.library.dto.MemberResponseDto;
+import com.sparta.library.dto.requestdto.MemberRequestDto;
+import com.sparta.library.dto.responsedto.MemberResponseDto;
 import com.sparta.library.entity.Member;
-import com.sparta.library.exception.MemberDuplicateException;
+import com.sparta.library.exception.member.MemberDuplicateException;
 import com.sparta.library.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 

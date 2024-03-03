@@ -1,4 +1,4 @@
-package com.sparta.library.exception;
+package com.sparta.library.exception.member;
 
 public class MemberDuplicateException extends RuntimeException {
     public MemberDuplicateException(String message) {
