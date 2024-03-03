@@ -13,6 +13,7 @@ public class BookResponseDto {
     private String language;
     private String publisher;
     private LocalDate registerDate;
+    private String loanAvailableMessage;
 
     public BookResponseDto(Book book) {
         this.id = book.getId();
@@ -21,5 +22,9 @@ public class BookResponseDto {
         this.language = book.getLanguage().getDisplayName();
         this.publisher = book.getPublisher();
         this.registerDate = LocalDate.from(book.getRegisterDate());
+        if (book.isLoanAvailable())
+            this.loanAvailableMessage = "대출 가능";
+        else
+            this.loanAvailableMessage = "대출 불가";
     }
 }
