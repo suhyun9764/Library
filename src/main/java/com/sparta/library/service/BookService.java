@@ -1,5 +1,6 @@
 package com.sparta.library.service;
 
+import com.sparta.library.exception.BookNotFoundException;
 import com.sparta.library.dto.BookRequestDto;
 import com.sparta.library.dto.BookResponseDto;
 import com.sparta.library.entity.Book;
@@ -7,6 +8,7 @@ import com.sparta.library.repository.BookRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BookService {
@@ -25,5 +27,14 @@ public class BookService {
         Book book = new Book(bookRequestDto);
         Book saveBook = bookRepository.save(book);
         return new BookResponseDto(saveBook);
+    }
+
+    public BookResponseDto findById(Long id) {
+        Optional<Book> findBook = bookRepository.findById(id);
+        if(findBook.isPresent()){
+            Book book = findBook.get();
+            return new BookResponseDto(book);
+        }
+        throw new BookNotFoundException("해당하는 도서가 존재하지 않습니다");
     }
 }

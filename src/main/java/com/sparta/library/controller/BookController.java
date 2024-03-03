@@ -3,6 +3,7 @@ package com.sparta.library.controller;
 import com.sparta.library.dto.BookRequestDto;
 import com.sparta.library.dto.BookResponseDto;
 import com.sparta.library.service.BookService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,5 +25,10 @@ public class BookController {
     @PostMapping("")
     public BookResponseDto save(@RequestBody BookRequestDto bookRequestDto) {
         return bookService.save(bookRequestDto);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<BookResponseDto> findById(@PathVariable Long id){
+        return ResponseEntity.ok(bookService.findById(id));
     }
 }
