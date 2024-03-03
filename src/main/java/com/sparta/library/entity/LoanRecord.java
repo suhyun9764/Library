@@ -18,11 +18,11 @@ public class LoanRecord {
     private Long memberId;
     @Column(name ="bookId",nullable = false)
     private Long bookId;
-    @Column(name = "isReturn", nullable = false)
+    @Column(name = "isReturn",columnDefinition = "boolean default false")
     private Boolean isReturn;
     @Column(name = "loanDate", nullable = false)
     private LocalDate loanDate;
-    @Column(name = "returnDate",nullable = false)
+    @Column(name = "returnDate")
     private LocalDate returnDate;
 
 }
