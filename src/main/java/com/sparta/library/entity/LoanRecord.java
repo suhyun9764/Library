@@ -8,21 +8,28 @@ import java.time.LocalDate;
 
 @Entity
 @Getter
-@Table(name="loanRecord")
+@Table(name = "loanRecord")
 @NoArgsConstructor
-public class LoanRecord {
+public class LoanRecord extends LoanDate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long recordId;
-    @Column(name = "memberId",nullable = false)
+    @Column(name = "memberId", nullable = false)
     private Long memberId;
-    @Column(name ="bookId",nullable = false)
+    @Column(name = "bookId", nullable = false)
     private Long bookId;
-    @Column(name = "isReturn",columnDefinition = "boolean default false")
-    private Boolean isReturn;
-    @Column(name = "loanDate", nullable = false)
-    private LocalDate loanDate;
+    @Column(name = "isReturn")
+    private Boolean isReturn = false;
     @Column(name = "returnDate")
     private LocalDate returnDate;
 
+    public LoanRecord(Long memberId, Long bookId) {
+        this.memberId = memberId;
+        this.bookId = bookId;
+    }
+
+    public void returnBook(LocalDate localDate) {
+        isReturn = true;
+        returnDate = localDate;
+    }
 }
