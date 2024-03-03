@@ -1,5 +1,8 @@
 package com.sparta.library.entity.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum Language {
     KOR("한국어"),
     ENG("영어"),
@@ -11,7 +14,4 @@ public enum Language {
         this.displayName = displayName;
     }
 
-    public String getDisplayName() {
-        return displayName;
-    }
 }
