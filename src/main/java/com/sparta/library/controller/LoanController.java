@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/loan")
+@RequestMapping("/api/loans")
 public class LoanController {
     private LoanService loanService;
 
@@ -22,8 +22,13 @@ public class LoanController {
         return ResponseEntity.ok(memberLoanHistory);
     }
 
-    @PostMapping("/{memberId}")
-    public ResponseEntity<String> executeBookLoan(@PathVariable Long memberId, @RequestParam Long bookId) {
+    @PostMapping("/{bookId}")
+    public ResponseEntity<String> executeBookLoan(@PathVariable Long bookId, @RequestParam Long memberId) {
         return ResponseEntity.ok(loanService.executeBookLoan(memberId, bookId));
+    }
+
+    @PutMapping("/{bookId}")
+    public ResponseEntity<String> returnBook(@PathVariable Long bookId) {
+        return ResponseEntity.ok(loanService.returnBook(bookId));
     }
 }

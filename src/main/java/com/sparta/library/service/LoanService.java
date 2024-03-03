@@ -11,6 +11,7 @@ import com.sparta.library.repository.LoanRecordRepository;
 import com.sparta.library.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -84,4 +85,24 @@ public class LoanService {
     }
 
 
+    public String returnBook(Long bookId) {
+        checkBookId(bookId);
+        Book book = bookRepository.findById(bookId).get();
+        checkIsNotReturn(book);
+        book.convertLoanStatus();
+        bookRepository.save(book);
+
+        List<LoanRecord> allByBookIdAndIsReturnFalse = loanRecordRepository.findAllByBookIdAndIsReturnFalse(bookId);
+        LoanRecord loanRecord = allByBookIdAndIsReturnFalse.get(0);
+        loanRecord.returnBook(LocalDate.now());
+        loanRecordRepository.save(loanRecord);
+
+        return "반납이 완료되었습니다";
+
+    }
+
+    private void checkIsNotReturn(Book book) {
+        if(book.isLoanAvailable())
+            throw new BookNotFoundException("대출하지 않은 책입니다");
+    }
 }

@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface LoanRecordRepository extends JpaRepository<LoanRecord, Long> {
     List<LoanRecord> findAllByMemberIdAndIsReturnFalseOrderByLoanDate(Long memberId);
+    List<LoanRecord> findAllByBookIdAndIsReturnFalse(Long bookId);
 }
