@@ -13,6 +13,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Table(name = "member")
 public class Member {
+    private static final int PENALTY_PERIOD = 2;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -39,6 +40,6 @@ public class Member {
     }
 
     public void getPenalty(LocalDate returnDate){
-        penaltyDate = returnDate.plusWeeks(2);
+        penaltyDate = returnDate.plusWeeks(PENALTY_PERIOD);
     }
 }

@@ -7,6 +7,9 @@ import com.sparta.library.exception.member.MemberDuplicateException;
 import com.sparta.library.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 
+import static com.sparta.library.constants.MemberMessage.PHONE_NUMBER_DUPLICATE;
+import static com.sparta.library.constants.MemberMessage.SOCIAL_NUMBER_DUPLICATE;
+
 @Service
 public class MemberService {
     private final MemberRepository memberRepository;
@@ -25,10 +28,10 @@ public class MemberService {
 
     private void checkSaveAvailable(MemberRequestDto memberRequestDto) {
         if(isSocialNumDuplicated(memberRequestDto)){
-            throw new MemberDuplicateException("이미 등록된 주민번호 입니다.");
+            throw new MemberDuplicateException(SOCIAL_NUMBER_DUPLICATE);
         }
         if(isPhoneDuplicated(memberRequestDto)){
-            throw new MemberDuplicateException("이미 등록된 전화번호 입니다.");
+            throw new MemberDuplicateException(PHONE_NUMBER_DUPLICATE);
         }
     }
 

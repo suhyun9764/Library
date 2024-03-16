@@ -1,14 +1,16 @@
 package com.sparta.library.service;
 
-import com.sparta.library.exception.book.BookNotFoundException;
 import com.sparta.library.dto.requestdto.BookRequestDto;
 import com.sparta.library.dto.responsedto.BookResponseDto;
 import com.sparta.library.entity.Book;
+import com.sparta.library.exception.book.BookNotFoundException;
 import com.sparta.library.repository.BookRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+
+import static com.sparta.library.constants.BookMessage.NOT_FOUND_BOOK;
 
 @Service
 public class BookService {
@@ -35,6 +37,6 @@ public class BookService {
             Book book = findBook.get();
             return new BookResponseDto(book);
         }
-        throw new BookNotFoundException("해당하는 도서가 존재하지 않습니다");
+        throw new BookNotFoundException(NOT_FOUND_BOOK);
     }
 }

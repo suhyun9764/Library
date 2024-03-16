@@ -5,6 +5,9 @@ import lombok.Getter;
 
 import java.time.LocalDate;
 
+import static com.sparta.library.constants.LoanMessage.CAN_LOAN;
+import static com.sparta.library.constants.LoanMessage.CAN_NOT_LOAN;
+
 @Getter
 public class BookResponseDto {
     private Long id;
@@ -23,8 +26,8 @@ public class BookResponseDto {
         this.publisher = book.getPublisher();
         this.registerDate = LocalDate.from(book.getRegisterDate());
         if (book.isLoanAvailable())
-            this.loanAvailableMessage = "대출 가능";
+            this.loanAvailableMessage = CAN_LOAN;
         else
-            this.loanAvailableMessage = "대출 불가";
+            this.loanAvailableMessage = CAN_NOT_LOAN;
     }
 }

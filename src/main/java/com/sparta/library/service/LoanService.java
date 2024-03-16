@@ -5,8 +5,8 @@ import com.sparta.library.entity.Book;
 import com.sparta.library.entity.LoanRecord;
 import com.sparta.library.entity.Member;
 import com.sparta.library.exception.book.BookNotFoundException;
-import com.sparta.library.exception.member.MemberNotFoundException;
 import com.sparta.library.exception.loan.ForbiddenLoanException;
+import com.sparta.library.exception.member.MemberNotFoundException;
 import com.sparta.library.repository.BookRepository;
 import com.sparta.library.repository.LoanRecordRepository;
 import com.sparta.library.repository.MemberRepository;
@@ -16,6 +16,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static com.sparta.library.constants.BookMessage.NOT_FOUND_BOOK;
+import static com.sparta.library.constants.LoanMessage.*;
+import static com.sparta.library.constants.MemberMessage.NOT_FOUND_MEMBER;
 
 @Service
 public class LoanService {
@@ -41,7 +45,7 @@ public class LoanService {
             }
             return loanRecordResponseDtoList;
         }
-        throw new MemberNotFoundException("등록된 회원이 아닙니다");
+        throw new MemberNotFoundException(NOT_FOUND_MEMBER);
     }
 
     public String executeBookLoan(Long memberId, Long bookId) {
@@ -54,14 +58,14 @@ public class LoanService {
         if (loanAvailable) {
             addLoanRecord(memberId, bookId);
             updateBookLoanStatus(book);
-            return "대출이 완료되었습니다";
+            return COMPLETE_LOAN_BOOK ;
         }
-        return "이미 대출중인 책입니다";
+        return BORROWED_BOOK;
     }
 
     private void checkIfBookBorrowed(Long memberId) {
         if(loanRecordRepository.existsByMemberIdAndIsReturnFalse(memberId)){
-            throw new ForbiddenLoanException("현재 대출중인 도서가 있습니다");
+            throw new ForbiddenLoanException(HAS_BORROWED_BOOK);
         }
     }
 
@@ -70,14 +74,14 @@ public class LoanService {
         LocalDate penaltyDate = member.getPenaltyDate();
         if(penaltyDate!=null) {
             if (LocalDate.now().isBefore(penaltyDate))
-                throw new ForbiddenLoanException("패널티로 인해 대출이 불가합니다. 패널티 기간" + penaltyDate);
+                throw new ForbiddenLoanException(HAS_PENALTY + penaltyDate);
         }
     }
 
     private void checkMemberId(Long memberId) {
         Optional<Member> member = memberRepository.findById(memberId);
         if (member.isEmpty())
-            throw new MemberNotFoundException("등록된 회원이 아닙니다");
+            throw new MemberNotFoundException(NOT_FOUND_MEMBER);
     }
 
     private void addLoanRecord(Long memberId, Long bookId) {
@@ -95,7 +99,7 @@ public class LoanService {
         Long recordId = updateLoanRecord(bookId);
         checkOverdue(recordId);
 
-        return "반납이 완료되었습니다";
+        return COMPLETE_LOAN_BOOK;
 
     }
 
@@ -126,13 +130,13 @@ public class LoanService {
 
     private void checkIsNotReturn(Book book) {
         if(book.isLoanAvailable())
-            throw new BookNotFoundException("대출하지 않은 책입니다");
+            throw new ForbiddenLoanException(NOT_BORROWED_BOOK);
     }
 
     private void checkBookId(Long bookId) {
         Optional<Book> book = bookRepository.findById(bookId);
         if (book.isEmpty())
-            throw new BookNotFoundException("해당하는 도서가 존재하지 않습니다");
+            throw new BookNotFoundException(NOT_FOUND_BOOK);
     }
 
     private Book getBook(Long bookId) {
