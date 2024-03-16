@@ -27,6 +27,7 @@ public class LoanService {
     private final LoanRecordRepository loanRecordRepository;
     private final BookRepository bookRepository;
 
+    // public
     public LoanService(MemberRepository memberRepository, LoanRecordRepository loanRecordRepository, BookRepository bookRepository) {
         this.memberRepository = memberRepository;
         this.loanRecordRepository = loanRecordRepository;
@@ -53,42 +54,15 @@ public class LoanService {
         checkPenalty(memberId);
         checkIfBookBorrowed(memberId);
         checkBookId(bookId);
+
         Book book = getBook(bookId);
-        boolean loanAvailable = book.isLoanAvailable();
-        if (loanAvailable) {
+        if (book.isLoanAvailable()) {
             addLoanRecord(memberId, bookId);
             updateBookLoanStatus(book);
-            return COMPLETE_LOAN_BOOK ;
+            return COMPLETE_LOAN_BOOK;
         }
         return BORROWED_BOOK;
     }
-
-    private void checkIfBookBorrowed(Long memberId) {
-        if(loanRecordRepository.existsByMemberIdAndIsReturnFalse(memberId)){
-            throw new ForbiddenLoanException(HAS_BORROWED_BOOK);
-        }
-    }
-
-    private void checkPenalty(Long memberId) {
-        Member member = memberRepository.findById(memberId).get();
-        LocalDate penaltyDate = member.getPenaltyDate();
-        if(penaltyDate!=null) {
-            if (LocalDate.now().isBefore(penaltyDate))
-                throw new ForbiddenLoanException(HAS_PENALTY + penaltyDate);
-        }
-    }
-
-    private void checkMemberId(Long memberId) {
-        Optional<Member> member = memberRepository.findById(memberId);
-        if (member.isEmpty())
-            throw new MemberNotFoundException(NOT_FOUND_MEMBER);
-    }
-
-    private void addLoanRecord(Long memberId, Long bookId) {
-        LoanRecord loanRecord = new LoanRecord(memberId, bookId);
-        loanRecordRepository.save(loanRecord);
-    }
-
 
     public String returnBook(Long bookId) {
         checkBookId(bookId);
@@ -103,16 +77,53 @@ public class LoanService {
 
     }
 
-    private void checkOverdue(Long recordId) {
-        LoanRecord loanRecord = loanRecordRepository.findById(recordId).get();
-        if(loanRecord.isOverdue())
-            givePenalty(loanRecord);
+    // private
+    private void checkMemberId(Long memberId) {
+        if (!memberRepository.existsById(memberId)) {
+            throw new MemberNotFoundException(NOT_FOUND_MEMBER);
+        }
     }
 
-    private void givePenalty(LoanRecord loanRecord) {
-        Member member = memberRepository.findById(loanRecord.getMemberId()).get();
-        member.getPenalty(loanRecord.getReturnDate());
-        memberRepository.save(member);
+    private void checkPenalty(Long memberId) {
+        Member member = memberRepository.findById(memberId).get();
+        LocalDate penaltyDate = member.getPenaltyDate();
+        if (penaltyDate != null) {
+            if (LocalDate.now().isBefore(penaltyDate))
+                throw new ForbiddenLoanException(HAS_PENALTY + penaltyDate);
+        }
+    }
+
+    private void checkIfBookBorrowed(Long memberId) {
+        if (loanRecordRepository.existsByMemberIdAndIsReturnFalse(memberId)) {
+            throw new ForbiddenLoanException(HAS_BORROWED_BOOK);
+        }
+    }
+
+    private void checkBookId(Long bookId) {
+        if (!bookRepository.existsById(bookId)) {
+            throw new BookNotFoundException(NOT_FOUND_BOOK);
+        }
+    }
+
+    private Book getBook(Long bookId) {
+        Optional<Book> book = bookRepository.findById(bookId);
+        Book findBook = book.orElseThrow();
+        return findBook;
+    }
+
+    private void addLoanRecord(Long memberId, Long bookId) {
+        LoanRecord loanRecord = new LoanRecord(memberId, bookId);
+        loanRecordRepository.save(loanRecord);
+    }
+
+    private void updateBookLoanStatus(Book book) {
+        book.convertLoanStatus();
+        bookRepository.save(book);
+    }
+
+    private void checkIsNotReturn(Book book) {
+        if (book.isLoanAvailable())
+            throw new ForbiddenLoanException(NOT_BORROWED_BOOK);
     }
 
     private long updateLoanRecord(Long bookId) {
@@ -124,33 +135,24 @@ public class LoanService {
 
     private LoanRecord getLoanRecord(Long bookId) {
         List<LoanRecord> allByBookIdAndIsReturnFalse = loanRecordRepository.findAllByBookIdAndIsReturnFalse(bookId);
-        LoanRecord loanRecord = allByBookIdAndIsReturnFalse.stream().findFirst().get();
+        LoanRecord loanRecord = allByBookIdAndIsReturnFalse.stream().
+                findFirst().orElseThrow();
+
         return loanRecord;
     }
 
-    private void checkIsNotReturn(Book book) {
-        if(book.isLoanAvailable())
-            throw new ForbiddenLoanException(NOT_BORROWED_BOOK);
+
+    private void checkOverdue(Long recordId) {
+        LoanRecord loanRecord = loanRecordRepository.findById(recordId).get();
+        if (loanRecord.isOverdue())
+            givePenalty(loanRecord);
     }
 
-    private void checkBookId(Long bookId) {
-        Optional<Book> book = bookRepository.findById(bookId);
-        if (book.isEmpty())
-            throw new BookNotFoundException(NOT_FOUND_BOOK);
+    private void givePenalty(LoanRecord loanRecord) {
+        Member member = memberRepository.findById(loanRecord.getMemberId()).get();
+        member.getPenalty(loanRecord.getReturnDate());
+        memberRepository.save(member);
     }
-
-    private Book getBook(Long bookId) {
-        Optional<Book> book = bookRepository.findById(bookId);
-        Book findBook = book.get();
-        return findBook;
-    }
-
-
-    private void updateBookLoanStatus(Book book) {
-        book.convertLoanStatus();
-        bookRepository.save(book);
-    }
-
 
 
 }
