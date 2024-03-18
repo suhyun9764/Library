@@ -1,8 +1,8 @@
 package com.sparta.library.exception;
 
 import com.sparta.library.exception.book.BookNotFoundException;
-import com.sparta.library.exception.loan.MemberNotFoundException;
-import com.sparta.library.exception.loan.MemberPenaltyException;
+import com.sparta.library.exception.member.MemberNotFoundException;
+import com.sparta.library.exception.loan.ForbiddenLoanException;
 import com.sparta.library.exception.member.MemberDuplicateException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +27,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
-    @ExceptionHandler(MemberPenaltyException.class)
-    public ResponseEntity<String> handleMemberPenaltyException(MemberPenaltyException ex) {
+    @ExceptionHandler(ForbiddenLoanException.class)
+    public ResponseEntity<String> handleMemberPenaltyException(ForbiddenLoanException ex) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
     }
 }

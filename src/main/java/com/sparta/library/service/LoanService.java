@@ -5,8 +5,8 @@ import com.sparta.library.entity.Book;
 import com.sparta.library.entity.LoanRecord;
 import com.sparta.library.entity.Member;
 import com.sparta.library.exception.book.BookNotFoundException;
-import com.sparta.library.exception.loan.MemberNotFoundException;
-import com.sparta.library.exception.loan.MemberPenaltyException;
+import com.sparta.library.exception.member.MemberNotFoundException;
+import com.sparta.library.exception.loan.ForbiddenLoanException;
 import com.sparta.library.repository.BookRepository;
 import com.sparta.library.repository.LoanRecordRepository;
 import com.sparta.library.repository.MemberRepository;
@@ -47,6 +47,7 @@ public class LoanService {
     public String executeBookLoan(Long memberId, Long bookId) {
         checkMemberId(memberId);
         checkPenalty(memberId);
+        checkIfBookBorrowed(memberId);
         checkBookId(bookId);
         Book book = getBook(bookId);
         boolean loanAvailable = book.isLoanAvailable();
@@ -58,12 +59,18 @@ public class LoanService {
         return "이미 대출중인 책입니다";
     }
 
+    private void checkIfBookBorrowed(Long memberId) {
+        if(loanRecordRepository.existsByMemberIdAndIsReturnFalse(memberId)){
+            throw new ForbiddenLoanException("현재 대출중인 도서가 있습니다");
+        }
+    }
+
     private void checkPenalty(Long memberId) {
         Member member = memberRepository.findById(memberId).get();
         LocalDate penaltyDate = member.getPenaltyDate();
         if(penaltyDate!=null) {
             if (LocalDate.now().isBefore(penaltyDate))
-                throw new MemberPenaltyException("패널티로 인해 대출이 불가합니다. 패널티 기간" + penaltyDate);
+                throw new ForbiddenLoanException("패널티로 인해 대출이 불가합니다. 패널티 기간" + penaltyDate);
         }
     }
 
