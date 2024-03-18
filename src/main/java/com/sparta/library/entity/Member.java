@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -24,6 +26,8 @@ public class Member {
     private String phone;
     @Column(name = "address", nullable = false)
     private String address;
+    @Column(name = "penalty")
+    private LocalDate penaltyDate;
 
 
     public Member(MemberRequestDto memberRequestDto) {
@@ -32,5 +36,9 @@ public class Member {
         this.socialNum = memberRequestDto.getSocialNum();
         this.phone = memberRequestDto.getPhone();
         this.address = memberRequestDto.getAddress();
+    }
+
+    public void getPenalty(LocalDate returnDate){
+        penaltyDate = returnDate.plusWeeks(2);
     }
 }

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 @Entity
 @Getter
@@ -31,5 +32,12 @@ public class LoanRecord extends LoanDate {
     public void returnBook(LocalDate localDate) {
         isReturn = true;
         returnDate = localDate;
+    }
+
+    public boolean isOverdue() {
+        long between = ChronoUnit.DAYS.between(getLoanDate(), returnDate);
+        if(between>7)
+            return true;
+        return false;
     }
 }
